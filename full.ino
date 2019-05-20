@@ -1,4 +1,3 @@
-//VCC——5V   
 //GND——GND
 //S0——D3   
 //S1——D4
@@ -6,8 +5,11 @@
 //S3——D6
 //OUT——D2
 
-#include <Servo.h>
 
+#include <Servo.h>
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(32, 30, 28, 26, 24, 22);
 
 Servo rampa;
 Servo selector; 
@@ -21,6 +23,7 @@ int frequency = 0;
 int color=0;
  
 void setup() {
+  lcd.begin(16,2);
    Serial.begin(9600);
    pinMode(S0, OUTPUT);
    pinMode(S1, OUTPUT);
@@ -34,53 +37,76 @@ void setup() {
 }
  
 void loop() {
-  selector.write(90);
-  Serial.print("cero grados \n");
-  delay(5000);
-  selector.write(35);
-  Serial.print("treita y cinco grados \n");
-  delay(3000); 
+  
+  rampa.write(90);
+  selector.write(170);
+  
+  Serial.print("Esperando Esfera\n");
+  lcd.setCursor(0,0);
+  lcd.print ("Esperando Esfera");
+  delay(4000);
+  lcd.clear();
+  
+  selector.write(110);
+  Serial.print("Leyendo Color\n");
+  lcd.setCursor(0,0);
+  lcd.print ("Leyendo Color");
+  delay(3000);
+  lcd.clear();
 
-  //selector.write(85);
   color = readColor();
-  //delay(5000);
-  //selector.write(45);
-  //delay(1000);
-  selector.write(0);
+  
+  selector.write(80);
   Serial.print("90 grados \n");
-  //delay(5000);
    switch (color) {
+    
     case 1:
     Serial.print("RED");
-    //bottomServo.write(50);
-     rampa.write(90);
-    delay(5000);
+    lcd.setCursor(0,0);
+    lcd.print ("Color");
+    lcd.setCursor(0,1);
+    lcd.print ("Rojo");
+    rampa.write(40);
+    delay(1200);
+    lcd.clear();
     break;
+
+    
     case 2:
-    Serial.print("ORANGE");
-    //bottomServo.write(75);
-    break;
-    case 3:
-   // bottomServo.write(100);
     Serial.print("GREEN");
+    lcd.setCursor(0,0);
+    lcd.print ("Color");
+    lcd.setCursor(0,1);
+    lcd.print ("Verde");
+    rampa.write(120);
+    delay(1200);
+    lcd.clear();
     break;
-    case 4:
-    //bottomServo.write(125);
+
+    
+    case 3:
     Serial.print("YELLOW");
-    rampa.write(0);
-    delay(2000);
-    break;
-    case 5:
-    //bottomServo.write(150);
-    Serial.print("BROWN");
-    break;
-    case 6:
-    //bottomServo.write(175);
-     Serial.print("BLUE");
+    lcd.setCursor(0,0);
+    lcd.print ("Color");
+    lcd.setCursor(0,1);
+    lcd.print ("Amarillo");
+    rampa.write(160);
+    delay(1200);
+    lcd.clear();
     break;
     
+    
     case 0:
+    Serial.print("Color Extra");
+    lcd.setCursor(0,0);
+    lcd.print ("Color");
+    lcd.setCursor(0,1);
+    lcd.print ("No Encontrado");
+    rampa.write(80);
+    delay(1200);
+    lcd.clear();
     break;
+    
   }
   delay(300);
   
@@ -122,24 +148,16 @@ int readColor() {
   //Serial.print(frequency);//printing RED color frequency
   //Serial.println("  ");
   delay(50);
-  if(G<135 & G>110 & B<110 &B>90){
-    color = 1; // Red
-    
+
+  
+  if(G<160 & G>105 & B<140 &B>100){
+    color = 1; // Red  
   }
-  if(G<55 & G>43 & B<47 &B>35){
-    color = 2; // Orange
-  }
-  if(R<53 & R>40 & G<53 & G>40){
-    color = 3; // Green
+  if(R<170 & R>145 & G<140 & G>125){
+    color = 2; // Green
   }
   if(R<38 & R>24 & G<44 & G>30){
-    color = 4; // Yellow
-  }
-  if(R<56 & R>46 & G<65 & G>55){
-    color = 5; // Brown
-  }
-  if (G<58 & G>45 & B<40 &B>26){
-    color = 6; // Blue
+    color = 3; // Yellow
   }
   return color;  
 }
