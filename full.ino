@@ -13,6 +13,7 @@ LiquidCrystal lcd(32, 30, 28, 26, 24, 22);
 
 Servo rampa;
 Servo selector; 
+Servo arriba;
 const int S0 = 8;
 const int S1 = 9;
 const int S2 = 12;
@@ -32,14 +33,21 @@ void setup() {
    pinMode(sensorOut, INPUT);
    rampa.attach(7);
    selector.attach(6);
+   arriba.attach(34);
    digitalWrite(S0, HIGH);
    digitalWrite(S1, LOW);
 }
  
 void loop() {
   
-  rampa.write(90);
+  arriba.write(0);
+  rampa.write(55);
   selector.write(170);
+  delay(1000);
+  arriba.write(100);
+  delay(250);
+  arriba.write(0);
+ 
   
   Serial.print("Esperando Esfera\n");
   lcd.setCursor(0,0);
@@ -57,7 +65,9 @@ void loop() {
   color = readColor();
   
   selector.write(80);
-  Serial.print("90 grados \n");
+  //Serial.print("90 grados \n");
+  //primero lo pone recto y luego lo gira
+  delay(250); 
    switch (color) {
     
     case 1:
@@ -66,7 +76,7 @@ void loop() {
     lcd.print ("Color");
     lcd.setCursor(0,1);
     lcd.print ("Rojo");
-    rampa.write(40);
+    rampa.write(20);
     delay(1200);
     lcd.clear();
     break;
@@ -78,7 +88,7 @@ void loop() {
     lcd.print ("Color");
     lcd.setCursor(0,1);
     lcd.print ("Verde");
-    rampa.write(120);
+    rampa.write(55);
     delay(1200);
     lcd.clear();
     break;
@@ -89,8 +99,8 @@ void loop() {
     lcd.setCursor(0,0);
     lcd.print ("Color");
     lcd.setCursor(0,1);
-    lcd.print ("Amarillo");
-    rampa.write(160);
+    lcd.print ("Amarillo XD");
+    rampa.write(90);
     delay(1200);
     lcd.clear();
     break;
@@ -102,7 +112,7 @@ void loop() {
     lcd.print ("Color");
     lcd.setCursor(0,1);
     lcd.print ("No Encontrado");
-    rampa.write(80);
+    //rampa.write(80);
     delay(1200);
     lcd.clear();
     break;
@@ -122,8 +132,8 @@ int readColor() {
   frequency = pulseIn(sensorOut, LOW);
   int R = frequency;
   // Printing the value on the serial monitor
-  //Serial.print("R= ");//printing name
-  //Serial.print(frequency);//printing RED color frequency
+  Serial.print("R= ");//printing name
+  Serial.print(frequency);//printing RED color frequency
   //Serial.print("  ");
   delay(50);
   // Setting Green filtered photodiodes to be read
@@ -133,9 +143,9 @@ int readColor() {
   frequency = pulseIn(sensorOut, LOW);
   int G = frequency;
   // Printing the value on the serial monitor
-  //Serial.print("G= ");//printing name
-  //Serial.print(frequency);//printing RED color frequency
-  //Serial.print("  ");
+  Serial.print("G= ");//printing name
+  Serial.print(frequency);//printing RED color frequency
+  Serial.print("  ");
   delay(50);
   // Setting Blue filtered photodiodes to be read
   digitalWrite(S2, LOW);
@@ -144,9 +154,9 @@ int readColor() {
   frequency = pulseIn(sensorOut, LOW);
   int B = frequency;
   // Printing the value on the serial monitor
-  //Serial.print("B= ");//printing name
-  //Serial.print(frequency);//printing RED color frequency
-  //Serial.println("  ");
+  Serial.print("B= ");//printing name
+  Serial.print(frequency);//printing RED color frequency
+  Serial.println("  ");
   delay(50);
 
   
