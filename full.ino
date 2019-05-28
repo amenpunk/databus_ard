@@ -22,7 +22,12 @@ const int sensorOut = 10;
  
 int frequency = 0;
 int color=0;
- 
+
+int rojo;
+int amarillo;
+int verde;
+
+
 void setup() {
   lcd.begin(16,2);
    Serial.begin(9600);
@@ -41,11 +46,12 @@ void setup() {
 void loop() {
   
   arriba.write(0);
-  rampa.write(55);
+  rampa.write(65);
   selector.write(170);
   delay(1000);
   arriba.write(100);
-  delay(250);
+  //delay(200);
+  delay(180);
   arriba.write(0);
  
   
@@ -76,9 +82,10 @@ void loop() {
     lcd.print ("Color");
     lcd.setCursor(0,1);
     lcd.print ("Rojo");
-    rampa.write(20);
+    rampa.write(50);
     delay(1200);
     lcd.clear();
+    rojo++;
     break;
 
     
@@ -88,9 +95,10 @@ void loop() {
     lcd.print ("Color");
     lcd.setCursor(0,1);
     lcd.print ("Verde");
-    rampa.write(55);
+    rampa.write(65);
     delay(1200);
     lcd.clear();
+    verde++;
     break;
 
     
@@ -99,10 +107,11 @@ void loop() {
     lcd.setCursor(0,0);
     lcd.print ("Color");
     lcd.setCursor(0,1);
-    lcd.print ("Amarillo XD");
+    lcd.print ("Amarillo");
     rampa.write(90);
     delay(1200);
     lcd.clear();
+    amarillo++;
     break;
     
     
@@ -112,61 +121,69 @@ void loop() {
     lcd.print ("Color");
     lcd.setCursor(0,1);
     lcd.print ("No Encontrado");
-    //rampa.write(80);
-    delay(1200);
-    lcd.clear();
-    break;
-    
+    rampa.write(30);
   }
   delay(300);
   
   color=0;
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print ("Verde:");
+  lcd.print(verde);
+  lcd.print("Rojo:");
+  lcd.print(rojo);
+  lcd.setCursor(0,1);
+  lcd.print("Amarillo:");
+  lcd.print(amarillo);
+  delay(1500);
+  lcd.clear();
+    
 
 }
 
 int readColor() {
-  // Setting red filtered photodiodes to be read
+ 
   digitalWrite(S2, LOW);
   digitalWrite(S3, LOW);
-  // Reading the output frequency
+  
   frequency = pulseIn(sensorOut, LOW);
   int R = frequency;
-  // Printing the value on the serial monitor
+  
   Serial.print("R= ");//printing name
   Serial.print(frequency);//printing RED color frequency
-  //Serial.print("  ");
+  Serial.print("  ");
   delay(50);
-  // Setting Green filtered photodiodes to be read
+ 
   digitalWrite(S2, HIGH);
   digitalWrite(S3, HIGH);
-  // Reading the output frequency
+
   frequency = pulseIn(sensorOut, LOW);
   int G = frequency;
-  // Printing the value on the serial monitor
+  
   Serial.print("G= ");//printing name
   Serial.print(frequency);//printing RED color frequency
   Serial.print("  ");
   delay(50);
-  // Setting Blue filtered photodiodes to be read
+ 
   digitalWrite(S2, LOW);
   digitalWrite(S3, HIGH);
-  // Reading the output frequency
+
   frequency = pulseIn(sensorOut, LOW);
   int B = frequency;
-  // Printing the value on the serial monitor
+ 
   Serial.print("B= ");//printing name
   Serial.print(frequency);//printing RED color frequency
   Serial.println("  ");
   delay(50);
 
   
-  if(G<135 & G>110 & B<135 &B>90 & R<70 & R>50 ){
+  if(B<140 &B>90 & R<90 & R>50 ){
     color = 1; // Red  
   }
-  if(R<135 & R>120 & G<120 & G>95 & B>80 & B<125){
+  if(G<155 & G>95 & R>100 & R<255){
     color = 2; // Green
   }
-  if(R<38 & R>24 & G<44 & G>30){
+  if(R<40 & R>20 & G<70 & G>30){
     color = 3; // Yellow
   }
   return color;  
